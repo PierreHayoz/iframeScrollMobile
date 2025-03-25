@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
 import {
   AnimatePresence,
@@ -7,11 +7,14 @@ import {
   useTransform,
 } from "framer-motion";
 
+import useScrollDirection from "./hooks/useScrollDirection";
+
 function App() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-
+  
+  const direction = useScrollDirection();
   const ref = useRef();
 
   const { scrollYProgress } = useScroll({
@@ -31,8 +34,13 @@ function App() {
   });
 
   console.log(isClicked);
+
   return (
     <div className={`bg-stone-800`}>
+      <div className="bg-red-300 fixed top-0 z-[99999]">
+        scroll direction : {direction}
+      </div>
+
       <div className="h-screen"></div>
       <motion.div
         ref={ref}
@@ -40,7 +48,7 @@ function App() {
         className="will-change-transform h-screen w-full overflow-hidden"
       >
         <AnimatePresence mode="wait">
-          {hasAnimated && ( // On vérifie hasAnimated au lieu de isAnimating
+          {hasAnimated && (
             <motion.div
               initial={{ y: 200, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
